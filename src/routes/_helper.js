@@ -33,20 +33,18 @@ export const testTool = {
       navigator.userAgent.match(/Windows Phone/i)
     );
   },
-  getMeetingConfig: function () {
+  getMeetingConfig: function (arr) {
+    console.log("arr", arr)
+    // [display_name, meeting_number, meeting_pwd, meeting_role, meeting_email, meeting_lang, meeting_china ]
     return {
-      mn: parseInt(document.getElementById("meeting_number").value),
-      name: testTool.b64EncodeUnicode(
-        document.getElementById("display_name").value
-      ),
-      pwd: document.getElementById("meeting_pwd").value,
-      role: parseInt(document.getElementById("meeting_role").value, 10),
-      email: testTool.b64EncodeUnicode(
-        document.getElementById("meeting_email").value
-      ),
-      lang: document.getElementById("meeting_lang").value,
+      name: testTool.b64EncodeUnicode(arr[0]),
+      mn: parseInt(arr[1]),
+      pwd: arr[2],
+      role: parseInt(arr[3], 10),
+      email: testTool.b64EncodeUnicode(arr[4]),
+      lang: arr[5],
       signature: "",
-      china: document.getElementById("meeting_china").value,
+      china: arr[6],
     };
   },
   createZoomNode: function (id, url) {

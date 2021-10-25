@@ -1,14 +1,26 @@
 <script>
 	import { onMount } from "svelte";
 	import { testTool } from "./_helper.js";
+	import { goto } from "@sapper/app"
 
-	let display_name = ""
-	let meeting_number = 0
-	let meeting_pwd = ""
-	let meeting_lang = ""
+	let display_name = "Rabih"
+	let meeting_number = 90909;
+	let meeting_pwd = "pass";
+	let meeting_lang = "en-US"
 	let meeting_role = 1
+	let meeting_email = "robycigar"
+	let meeting_china = 0
+	let meeting_config;
+	let meetingConfig;
+	let signature;
+	let API_KEY = "QZ9dSBz3SUq-thfPe71XMw";
+	let API_SECRET = "m9l4FqPgrsg9bw3Le1MeLyecmPPOrCnTjjvR";
 
 	onMount(() => {
+		setTimeout(() => {
+			document.querySelector("#zmmtg-root").remove()
+		}, 200)
+
 		window.addEventListener('DOMContentLoaded', function(event) {
 		  console.log('DOM fully loaded and parsed');
 		  websdkready();
@@ -27,31 +39,20 @@
 		  // ZoomMtg.setZoomJSLib('http://localhost:9999/node_modules/@zoomus/websdk/dist/lib', '/av'); // Local version default, Angular Project change to use cdn version
 		  ZoomMtg.preLoadWasm(); // pre download wasm file to save time.
 
-		  var API_KEY = "YOUR_API_KEY";
+		  // API_KEY = "QZ9dSBz3SUq-thfPe71XMw";
 		  /**
 		   * NEVER PUT YOUR ACTUAL API SECRET IN CLIENT SIDE CODE, THIS IS JUST FOR QUICK PROTOTYPING
 		   * The below generateSignature should be done server side as not to expose your api secret in public
 		   * You can find an eaxmple in here: https://marketplace.zoom.us/docs/sdk/native-sdks/web/essential/signature
 		   */
-		  var API_SECRET = "YOUR_API_SECRET";
+		  // API_SECRET = "m9l4FqPgrsg9bw3Le1MeLyecmPPOrCnTjjvR";
 
 		  // some help code, remember mn, pwd, lang to cookie, and autofill.
-		  document.getElementById("display_name").value =
-		    "CDN" +
-		    ZoomMtg.getJSSDKVersion()[0] +
-		    testTool.detectOS() +
-		    "#" +
-		    testTool.getBrowserInfo();
-		  document.getElementById("meeting_number").value = testTool.getCookie(
-		    "meeting_number"
-		  );
-		  document.getElementById("meeting_pwd").value = testTool.getCookie(
-		    "meeting_pwd"
-		  );
+		  meeting_number = testTool.getCookie("meeting_number");
+		  meeting_pwd = testTool.getCookie("meeting_pwd");
+		  
 		  if (testTool.getCookie("meeting_lang"))
-		    document.getElementById("meeting_lang").value = testTool.getCookie(
-		      "meeting_lang"
-		    );
+		    meeting_lang = testTool.getCookie("meeting_lang");
 
 		  document
 		    .getElementById("meeting_lang")
@@ -75,55 +76,14 @@
 		      }
 		      var tmpPwd = e.target.value.match(/pwd=([\d,\w]+)/);
 		      if (tmpPwd) {
-		        document.getElementById("meeting_pwd").value = tmpPwd[1];
+		        meeting_pwd = tmpPwd[1];
 		        testTool.setCookie("meeting_pwd", tmpPwd[1]);
 		      }
-		      document.getElementById("meeting_number").value = tmpMn;
+		      meeting_number = tmpMn;
 		      testTool.setCookie(
 		        "meeting_number",
-		        document.getElementById("meeting_number").value
+		        meeting_number
 		      );
-		    });
-
-		  document.getElementById("clear_all").addEventListener("click", function (e) {
-		    testTool.deleteAllCookies();
-		    document.getElementById("display_name").value = "";
-		    document.getElementById("meeting_number").value = "";
-		    document.getElementById("meeting_pwd").value = "";
-		    document.getElementById("meeting_lang").value = "en-US";
-		    document.getElementById("meeting_role").value = 0;
-		    window.location.href = "/index.html";
-		  });
-
-		  // click join meeting button
-		  document
-		    .getElementById("join_meeting")
-		    .addEventListener("click", function (e) {
-		      e.preventDefault();
-		      var meetingConfig = testTool.getMeetingConfig();
-		      if (!meetingConfig.mn || !meetingConfig.name) {
-		        alert("Meeting number or username is empty");
-		        return false;
-		      }
-
-		      
-		      testTool.setCookie("meeting_number", meetingConfig.mn);
-		      testTool.setCookie("meeting_pwd", meetingConfig.pwd);
-
-		      var signature = ZoomMtg.generateSignature({
-		        meetingNumber: meetingConfig.mn,
-		        apiKey: API_KEY,
-		        apiSecret: API_SECRET,
-		        role: meetingConfig.role,
-		        success: function (res) {
-		          console.log(res.result);
-		          meetingConfig.signature = res.result;
-		          meetingConfig.apiKey = API_KEY;
-		          var joinUrl = "/meeting.html?" + testTool.serialize(meetingConfig);
-		          console.log(joinUrl);
-		          window.open(joinUrl, "_blank");
-		        },
-		      });
 		    });
 
 		  function copyToClipboard(elementId) {
@@ -134,79 +94,99 @@
 		    document.execCommand("copy");
 		    document.body.removeChild(aux);
 		  }
-		    
-		  // click copy jon link button
-		  window.copyJoinLink = function (element) {
-		    var meetingConfig = testTool.getMeetingConfig();
-		    if (!meetingConfig.mn || !meetingConfig.name) {
-		      alert("Meeting number or username is empty");
-		      return false;
-		    }
-		    var signature = ZoomMtg.generateSignature({
-		      meetingNumber: meetingConfig.mn,
-		      apiKey: API_KEY,
-		      apiSecret: API_SECRET,
-		      role: meetingConfig.role,
-		      success: function (res) {
-		        console.log(res.result);
-		        meetingConfig.signature = res.result;
-		        meetingConfig.apiKey = API_KEY;
-		        var joinUrl =
-		          testTool.getCurrentDomain() +
-		          "/meeting.html?" +
-		          testTool.serialize(meetingConfig);
-		        document.getElementById('copy_link_value').setAttribute('link', joinUrl);
-		        copyToClipboard('copy_link_value');
-		        
-		      },
-		    });
-		  };
 
 		}
 	})
 
+	function deleteCookie() {
+		    testTool.deleteAllCookies();
+		    display_name = "";
+		    meeting_number = "";
+		    meeting_pwd = "";
+		    meeting_lang = "en-US";
+		    meeting_role = 0;
+		    goto("/");
+	}
 
+	// click join meeting button
+	function handleJoin() {
+			console.log("HEREEE")
+			meeting_config = [display_name, meeting_number, meeting_pwd, meeting_role, meeting_email, meeting_lang, meeting_china];
+		      
+		      meetingConfig = testTool.getMeetingConfig(meeting_config);
+		      console.log("conf",meetingConfig)
+		      if (!meetingConfig.mn || !meetingConfig.name) {
+		        alert("Meeting number or username is empty");
+		        return false;
+		      }
+		      testTool.setCookie("meeting_number", meetingConfig.mn);
+		      testTool.setCookie("meeting_pwd", meetingConfig.pwd);
+		      console.log("HERE2" )
+
+		      signature = ZoomMtg.generateSignature({
+		        meetingNumber: meetingConfig.mn,
+		        apiKey: API_KEY,
+		        apiSecret: API_SECRET,
+		        role: meetingConfig.role,
+		        success: async function (res) {
+		        console.log(signature)
+		        console.log(meetingConfig)
+		          console.log(res.result);
+		          meetingConfig.signature = res.result;
+		          meetingConfig.apiKey = API_KEY;
+		          var joinUrl = "/meeting?" + testTool.serialize(meetingConfig);
+		          console.log("joinurl", joinUrl);
+		          await goto(joinUrl);
+		        },
+		      });
+	}
+
+$: console.log("configg", meeting_config)
 </script>
 
-    <nav id="nav-tool" class="navbar navbar-inverse navbar-fixed-top">
+<svelte:head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</svelte:head>
+
+    <nav id="nav-tool" class="">
         <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Zoom WebSDK</a>
+            <div>
+                <h1>Zoom WebSDK</h1>
             </div>
             <div id="navbar" class="websdktest">
-                <form class="navbar-form navbar-right" id="meeting_form">
+                <form>
                     <div class="form-group">
-                        <input type="text" name="display_name" id="display_name" value="2.0.1#CDN" maxLength="100"
-                            placeholder="Name" class="form-control" required>
+                        <input bind:value={display_name} type="text" maxLength="100"
+                            placeholder="Name" required> 
                     </div>
                     <div class="form-group">
-                        <input type="text" name="meeting_number" id="meeting_number" value="" maxLength="200"
+                        <input bind:value={meeting_number} type="text" name="meeting_number" id="meeting_number" maxLength="200"
                             style="width:150px" placeholder="Meeting Number" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" name="meeting_pwd" id="meeting_pwd" value="" style="width:150px"
+                        <input bind:value={meeting_pwd} type="text" name="meeting_pwd" id="meeting_pwd" style="width:150px"
                             maxLength="32" placeholder="Meeting Password" class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="text" name="meeting_email" id="meeting_email" value="" style="width:150px"
+                        <input bind:value={meeting_email} type="text" name="meeting_email" id="meeting_email" style="width:150px"
                             maxLength="32" placeholder="Email option" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <select id="meeting_role" class="sdk-select">
+                        <select bind:value={meeting_role} id="meeting_role" class="sdk-select">
                             <option value=0>Attendee</option>
                             <option value=1>Host</option>
                             <option value=5>Assistant</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <select id="meeting_china" class="sdk-select">
+                        <select bind:value={meeting_china} id="meeting_china" class="sdk-select">
                             <option value=0>Global</option>
                             <option value=1>China</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <select id="meeting_lang" class="sdk-select">
+                        <select bind:value={meeting_lang} id="meeting_lang" class="sdk-select">
                             <option value="en-US">English</option>
                             <option value="de-DE">German Deutsch</option>
                             <option value="es-ES">Spanish Español</option>
@@ -222,24 +202,20 @@
                         </select>
                     </div>
 
-                    <input type="hidden" value="" id="copy_link_value" />
-                    <button type="submit" class="btn btn-primary" id="join_meeting">Join</button>
-                    <button type="submit" class="btn btn-primary" id="clear_all">Clear</button>
-                    <button type="button" link="" onclick="window.copyJoinLink('#copy_join_link')"
-                        class="btn btn-primary" id="copy_join_link">Copy Direct join link</button>
-
 
                 </form>
             </div>
             <!--/.navbar-collapse -->
         </div>
     </nav>
-
-
-    <div id="show-test-tool">
-        <button type="submit" class="btn btn-primary" id="show-test-tool-btn"
-            title="show or hide top test tool">Show</button>
+    <div class="container">
+    	<button class="btn btn-primary" on:click={handleJoin}>JOIN</button>
     </div>
 
-
-<h1 style="color: yellow">FUCK ZOOM</h1>
+<h1>{display_name}</h1>
+<h1>{meeting_number}</h1>
+<h1>{meeting_pwd}</h1>
+<h1>{meeting_lang}</h1>
+<h1>{meeting_role}</h1> 
+<h1>{meeting_email}</h1>
+<h1>{meeting_china}</h1>
