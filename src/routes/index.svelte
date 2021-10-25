@@ -5,6 +5,8 @@
 	let display_name = ""
 	let meeting_number = 0
 	let meeting_pwd = ""
+	let meeting_lang = ""
+	let meeting_role = 1
 
 	onMount(() => {
 		window.addEventListener('DOMContentLoaded', function(event) {
