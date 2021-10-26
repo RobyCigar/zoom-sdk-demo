@@ -19,7 +19,7 @@
 	onMount(() => {
 		setTimeout(() => {
 			document.querySelector("#zmmtg-root").remove()
-		}, 200)
+		}, 100)
 
 		window.addEventListener('DOMContentLoaded', function(event) {
 		  console.log('DOM fully loaded and parsed');
@@ -37,7 +37,7 @@
 		  // if (!china) ZoomMtg.setZoomJSLib('https://source.zoom.us/2.0.1/lib', '/av'); // CDN version default
 		  // else ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/2.0.1/lib', '/av'); // china cdn option
 		  // ZoomMtg.setZoomJSLib('http://localhost:9999/node_modules/@zoomus/websdk/dist/lib', '/av'); // Local version default, Angular Project change to use cdn version
-		  ZoomMtg.preLoadWasm(); // pre download wasm file to save time.
+		  // ZoomMtg.preLoadWasm(); // pre download wasm file to save time.
 
 		  // API_KEY = "QZ9dSBz3SUq-thfPe71XMw";
 		  /**
@@ -86,27 +86,8 @@
 		      );
 		    });
 
-		  function copyToClipboard(elementId) {
-		    var aux = document.createElement("input");
-		    aux.setAttribute("value", document.getElementById(elementId).getAttribute('link'));
-		    document.body.appendChild(aux);  
-		    aux.select();
-		    document.execCommand("copy");
-		    document.body.removeChild(aux);
-		  }
-
 		}
 	})
-
-	function deleteCookie() {
-		    testTool.deleteAllCookies();
-		    display_name = "";
-		    meeting_number = "";
-		    meeting_pwd = "";
-		    meeting_lang = "en-US";
-		    meeting_role = 0;
-		    goto("/");
-	}
 
 	// click join meeting button
 	function handleJoin() {
@@ -211,11 +192,11 @@ $: console.log("configg", meeting_config)
     <div class="container">
     	<button class="btn btn-primary" on:click={handleJoin}>JOIN</button>
     </div>
-
-<h1>{display_name}</h1>
-<h1>{meeting_number}</h1>
-<h1>{meeting_pwd}</h1>
-<h1>{meeting_lang}</h1>
-<h1>{meeting_role}</h1> 
-<h1>{meeting_email}</h1>
-<h1>{meeting_china}</h1>
+ 
+<h1 style="text-align: center"> Display name: {display_name}</h1>
+<h1 style="text-align: center"> Meet number: {meeting_number}</h1>
+<h1 style="text-align: center"> Pass: {meeting_pwd}</h1>
+<h1 style="text-align: center"> Lang: {meeting_lang}</h1>
+<h1 style="text-align: center"> Is Admin? {meeting_role}</h1> 
+<h1 style="text-align: center"> Email: {meeting_email}</h1>
+<h1 style="text-align: center"> Is China? {meeting_china}</h1>
