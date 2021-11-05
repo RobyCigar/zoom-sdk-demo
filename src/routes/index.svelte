@@ -83,7 +83,7 @@ $: console.log("configg", meeting_config)
                         <input bind:value={meeting_pwd} type="text" name="meeting_pwd" id="meeting_pwd" style="width:150px"
                             maxLength="32" placeholder="Meeting Password" class="form-control">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <input bind:value={meeting_email} type="text" name="meeting_email" id="meeting_email" style="width:150px"
                             maxLength="32" placeholder="Email option" class="form-control">
                     </div>
@@ -116,7 +116,7 @@ $: console.log("configg", meeting_config)
                             <option value="vi-VN">Vietnamese Tiếng Việt</option>
                             <option value="it-IT">Italian italiano</option>
                         </select>
-                    </div>
+                    </div> -->
 
 
                 </form>
@@ -128,10 +128,13 @@ $: console.log("configg", meeting_config)
     	<button class="btn btn-primary" on:click={handleJoin}>JOIN</button>
     </div>
  
-<h1 style="text-align: center"> Display name: {display_name}</h1>
-<h1 style="text-align: center"> Meet number: {meeting_number}</h1>
-<h1 style="text-align: center"> Pass: {meeting_pwd}</h1>
-<h1 style="text-align: center"> Lang: {meeting_lang}</h1>
-<h1 style="text-align: center"> Is Admin? {meeting_role}</h1> 
-<h1 style="text-align: center"> Email: {meeting_email}</h1>
-<h1 style="text-align: center"> Is China? {meeting_china}</h1>
+<div class="container mt-4">
+	<h1>Meeting Config</h1>
+	<p> Display name: {display_name}</p>
+	<p> Meet number: {meeting_number}</p>
+	<p> Pass: {meeting_pwd}</p>
+	<p> Lang: {meeting_lang}</p>
+	<p> Is Admin? {meeting_role}</p> 
+	<p> Email: {meeting_email}</p>
+	<p> Is China? {meeting_china}</p>
+</div>
