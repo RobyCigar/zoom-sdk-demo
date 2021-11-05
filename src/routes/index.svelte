@@ -83,42 +83,6 @@ $: console.log("configg", meeting_config)
                         <input bind:value={meeting_pwd} type="text" name="meeting_pwd" id="meeting_pwd" style="width:150px"
                             maxLength="32" placeholder="Meeting Password" class="form-control">
                     </div>
-                    <!-- <div class="form-group">
-                        <input bind:value={meeting_email} type="text" name="meeting_email" id="meeting_email" style="width:150px"
-                            maxLength="32" placeholder="Email option" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <select bind:value={meeting_role} id="meeting_role" class="sdk-select">
-                            <option value=0>Attendee</option>
-                            <option value=1>Host</option>
-                            <option value=5>Assistant</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select bind:value={meeting_china} id="meeting_china" class="sdk-select">
-                            <option value=0>Global</option>
-                            <option value=1>China</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select bind:value={meeting_lang} id="meeting_lang" class="sdk-select">
-                            <option value="en-US">English</option>
-                            <option value="de-DE">German Deutsch</option>
-                            <option value="es-ES">Spanish Español</option>
-                            <option value="fr-FR">French Français</option>
-                            <option value="jp-JP">Japanese 日本語</option>
-                            <option value="pt-PT">Portuguese Portuguese</option>
-                            <option value="ru-RU">Russian Русский</option>
-                            <option value="zh-CN">Chinese 简体中文</option>
-                            <option value="zh-TW">Chinese 繁体中文</option>
-                            <option value="ko-KO">Korean 한국어</option>
-                            <option value="vi-VN">Vietnamese Tiếng Việt</option>
-                            <option value="it-IT">Italian italiano</option>
-                        </select>
-                    </div> -->
-
-
                 </form>
             </div>
             <!--/.navbar-collapse -->
