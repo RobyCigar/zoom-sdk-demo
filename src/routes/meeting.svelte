@@ -9,7 +9,6 @@
 
 		  // get meeting args from url
 		  var tmpArgs = testTool.parseQuery();
-		  console.log("shit", tmpArgs);
 		  var meetingConfig = {
 		    apiKey: tmpArgs.apiKey,
 		    meetingNumber: tmpArgs.mn,

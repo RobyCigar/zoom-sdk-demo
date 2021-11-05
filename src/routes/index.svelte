@@ -1,7 +1,6 @@
 <script>
 	import { onMount } from "svelte";
 	import { testTool } from "./_helper.js";
-	import { goto } from "@sapper/app"
 
 	let display_name = "Rabih"
 	let meeting_number = 90909;
@@ -13,80 +12,15 @@
 	let meeting_config;
 	let meetingConfig;
 	let signature;
+	let joinUrl;
 	let API_KEY = "QZ9dSBz3SUq-thfPe71XMw";
 	let API_SECRET = "m9l4FqPgrsg9bw3Le1MeLyecmPPOrCnTjjvR";
+
 
 	onMount(() => {
 		setTimeout(() => {
 			document.querySelector("#zmmtg-root").remove()
-		}, 100)
-
-		window.addEventListener('DOMContentLoaded', function(event) {
-		  console.log('DOM fully loaded and parsed');
-		  websdkready();
-		});
-
-		function websdkready() {
-		  if (testTool.isMobileDevice()) {
-		    vConsole = new VConsole();
-		  }
-		  console.log("checkSystemRequirements");
-		  console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
-
-		  // it's option if you want to change the WebSDK dependency link resources. setZoomJSLib must be run at first
-		  // if (!china) ZoomMtg.setZoomJSLib('https://source.zoom.us/2.0.1/lib', '/av'); // CDN version default
-		  // else ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/2.0.1/lib', '/av'); // china cdn option
-		  // ZoomMtg.setZoomJSLib('http://localhost:9999/node_modules/@zoomus/websdk/dist/lib', '/av'); // Local version default, Angular Project change to use cdn version
-		  // ZoomMtg.preLoadWasm(); // pre download wasm file to save time.
-
-		  // API_KEY = "QZ9dSBz3SUq-thfPe71XMw";
-		  /**
-		   * NEVER PUT YOUR ACTUAL API SECRET IN CLIENT SIDE CODE, THIS IS JUST FOR QUICK PROTOTYPING
-		   * The below generateSignature should be done server side as not to expose your api secret in public
-		   * You can find an eaxmple in here: https://marketplace.zoom.us/docs/sdk/native-sdks/web/essential/signature
-		   */
-		  // API_SECRET = "m9l4FqPgrsg9bw3Le1MeLyecmPPOrCnTjjvR";
-
-		  // some help code, remember mn, pwd, lang to cookie, and autofill.
-		  meeting_number = testTool.getCookie("meeting_number");
-		  meeting_pwd = testTool.getCookie("meeting_pwd");
-		  
-		  if (testTool.getCookie("meeting_lang"))
-		    meeting_lang = testTool.getCookie("meeting_lang");
-
-		  document
-		    .getElementById("meeting_lang")
-		    .addEventListener("change", function (e) {
-		      testTool.setCookie(
-		        "meeting_lang",
-		        document.getElementById("meeting_lang").value
-		      );
-		      testTool.setCookie(
-		        "_zm_lang",
-		        document.getElementById("meeting_lang").value
-		      );
-		    });
-		  // copy zoom invite link to mn, autofill mn and pwd.
-		  document
-		    .getElementById("meeting_number")
-		    .addEventListener("input", function (e) {
-		      var tmpMn = e.target.value.replace(/([^0-9])+/i, "");
-		      if (tmpMn.match(/([0-9]{9,11})/)) {
-		        tmpMn = tmpMn.match(/([0-9]{9,11})/)[1];
-		      }
-		      var tmpPwd = e.target.value.match(/pwd=([\d,\w]+)/);
-		      if (tmpPwd) {
-		        meeting_pwd = tmpPwd[1];
-		        testTool.setCookie("meeting_pwd", tmpPwd[1]);
-		      }
-		      meeting_number = tmpMn;
-		      testTool.setCookie(
-		        "meeting_number",
-		        meeting_number
-		      );
-		    });
-
-		}
+		}, 1000)
 	})
 
 	// click join meeting button
@@ -115,9 +49,10 @@
 		          console.log(res.result);
 		          meetingConfig.signature = res.result;
 		          meetingConfig.apiKey = API_KEY;
-		          var joinUrl = "/meeting?" + testTool.serialize(meetingConfig);
+		          
+				  joinUrl = "/meeting?" + testTool.serialize(meetingConfig);
 		          console.log("joinurl", joinUrl);
-		          await goto(joinUrl);
+				  window.open(joinUrl, '_blank').focus();
 		        },
 		      });
 	}
