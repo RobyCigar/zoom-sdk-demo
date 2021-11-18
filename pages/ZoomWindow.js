@@ -1,25 +1,20 @@
- import { useState, useEffect } from "react"
-// import ZoomWindow from "./ZoomWindow"
+import { useEffect } from "react"
+export default function ZoomWindow({zoomMtg}) {
+
+ let signature = "UVo5ZFNCejNTVXEtdGhmUGU3MVhNdy40MzI0LjE2MzcyNDk2MTkxMzEuMS5DNEgwQW41Smk4bExyQUpoUWZrYkRyK3ZhRHdlcU1lYW0zRXhHdEJ6VmNzPQ=="
 
 
-export default function Home() {
-  const [zoomMtg, setZoomMtg] = useState(null)
-  useEffect(() => {
-    // mengimpor modul
-   ( async () => {
-     if(typeof window !== "undefined"){
-      const {ZoomMtg} = (await import('@zoomus/websdk'))
-		  ZoomMtg.setZoomJSLib("https://source.zoom.us/2.0.1/lib", "/av"); // CDN version defaul
-		  ZoomMtg.preLoadWasm();
-		  ZoomMtg.prepareJssdk();
+    useEffect(() => {
         	ZoomMtg.init({
 		      leaveUrl: "/leave",
 		      webEndpoint: "",
 		      disableCORP: !window.crossOriginIsolated, // default true
 		      // disablePreview: false, // default false
 		      success: function () {
-		        ZoomMtg.i18n.load("en-US");
-		        ZoomMtg.i18n.reload("en-US");
+		        console.log(meetingConfig);
+		        console.log("signature", signature);
+		        ZoomMtg.i18n.load(meetingConfig.lang);
+		        ZoomMtg.i18n.reload(meetingConfig.lang);
 		        ZoomMtg.join({
 		          meetingNumber: "54353",
 		          userName: "Rabih",
@@ -64,17 +59,12 @@ export default function Home() {
 		    ZoomMtg.inMeetingServiceListener('onMeetingStatus', function (data) {
 		      console.log('inMeetingServiceListener onMeetingStatus', data);
 		    });
-      setZoomMtg(ZoomMtg)
+        console.log("loaded")
+    }, [zoomMtg])
 
+    return (
 
-    }
-    })()
-    
-    console.log("zoom meeting has already loaded")
-  }, [])
+        <div className="zoom-window"></div>
+    )
 
-  return (
-    <div style={{color: "white"}}>
-    </div>
-  )
 }
