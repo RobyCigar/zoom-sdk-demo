@@ -31,13 +31,14 @@ const handler = (req, res) => {
             return res
                 .status(400)
                 .send('Please add meetingNumber and role in your query')
+        console.log(process.env.API_KEY)
         const signature = generateSignature(
-            process.env.API_KEY,
-            process.env.API_SECRET,
+            "QZ9dSBz3SUq-thfPe71XMw",
+            "m9l4FqPgrsg9bw3Le1MeLyecmPPOrCnTjjvR",
             meetingNumber,
-            parseInt(role)
+            role
         )
-        return res.status(200).json(signature)
+        return res.status(200).json({signature: signature})
     }
 
     return res.status(400).send(`${req.method} Bad request`)

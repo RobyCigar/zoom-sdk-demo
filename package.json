@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@zoomus/websdk": "^2.0.1",
+    "axios": "^0.24.0",
     "next": "12.0.4",
     "react": "17.0.2",
     "react-dom": "17.0.2"

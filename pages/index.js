@@ -1,12 +1,38 @@
  import { useState, useEffect } from "react"
-// import ZoomWindow from "./ZoomWindow"
+ import { useRouter } from "next/router"
+ import axios from 'axios'
 
 
 export default function Home() {
+	// konfigurasi
   const [zoomMtg, setZoomMtg] = useState(null)
+  const [meetingNumber, setMeetingNumber] = useState("8785200656")
+  const [password, setPassword] = useState("123")
+  const [role, setRole] = useState(1) // 0 untuk join, 1 untuk membuat meet
+  const [apiKey, setApiKey] = useState('QZ9dSBz3SUq-thfPe71XMw')
+  const router = useRouter();
+
+
+
   useEffect(() => {
+
+  let sign = ""
+	const getSignature = async () => {
+		const { data: {signature }} = await axios.get(`/api?meetingNumber=${meetingNumber}&role=${role}`)
+		return signature
+	}
+
+	getSignature().then(res => {
+		sign = res
+	}).catch(err => console.log("error", err));
+
+	
     // mengimpor modul
-   ( async () => {
+   const loadZoom = async () => {
+   	console.log('meeting Number', meetingNumber)
+   	console.log('meeting signatiure', sign)
+   	console.log('pass', password)
+   	console.log('apikey', apiKey)
      if(typeof window !== "undefined"){
       const {ZoomMtg} = (await import('@zoomus/websdk'))
 		  ZoomMtg.setZoomJSLib("https://source.zoom.us/2.0.1/lib", "/av"); // CDN version defaul
@@ -21,12 +47,12 @@ export default function Home() {
 		        ZoomMtg.i18n.load("en-US");
 		        ZoomMtg.i18n.reload("en-US");
 		        ZoomMtg.join({
-		          meetingNumber: "54353",
+		          meetingNumber: meetingNumber,
 		          userName: "Rabih",
-		          signature: "UVo5ZFNCejNTVXEtdGhmUGU3MVhNdy40MzI0LjE2MzcyNDk2MTkxMzEuMS5DNEgwQW41Smk4bExyQUpoUWZrYkRyK3ZhRHdlcU1lYW0zRXhHdEJ6VmNzPQ==",
-		          apiKey: "QZ9dSBz3SUq-thfPe71XMw",
-		          userEmail: "rabihutomo@gamil.com",
-		          passWord: "somepass",
+		          signature: sign,
+		          userEmail: "rabihutomo11@gmail.com", // opsional
+		          passWord: password,
+		          apiKey: apiKey,
 		          success: function (res) {
 		            console.log("join meeting success");
 		            console.log("get attendeelist");
@@ -68,7 +94,8 @@ export default function Home() {
 
 
     }
-    })()
+    }
+    setTimeout( () => loadZoom(), 1000) 
     
     console.log("zoom meeting has already loaded")
   }, [])
