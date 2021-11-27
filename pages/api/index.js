@@ -1,49 +1,22 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import crypto from 'crypto'
+import axios from 'axios';
+import { headers, body, MeetingI } from '../_helper'
 
-function generateSignature(
-    apiKey,
-    apiSecret,
-    meetingNumber,
-    role
-) {
-    // Prevent time sync issue between client signature generation and zoom
-    const timestamp = Date.now() - 30000
-    const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString(
-        'base64'
-    )
-    const hash = crypto
-        .createHmac('sha256', apiSecret)
-        .update(msg)
-        .digest('base64')
-    const signature = Buffer.from(
-        `${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`
-    ).toString('base64')
+export default async function api(req, res) {
+    const { method } = req;
 
-    return signature
-}
+    switch(method) {
+        case "GET":
+            const data = await axios.post("https://api.zoom.us/v2/users/me/meetings", body, headers).then(res => {
+                console.log("res", res)
 
-const handler = (req, res) => {
-    if (req.method === 'GET') {
-        const { meetingNumber, role } = req.query
+                return res.data
+            }).catch(err => console.log("err", err))
 
-        if (typeof meetingNumber !== 'string' || typeof role !== 'string')
-            return res
-                .status(400)
-                .send('Please add meetingNumber and role in your query')
-        console.log(process.env.API_KEY)
-        const signature = generateSignature(
-            "Q4Lah9qqT127gh5kMd_VQg", // akun lingo
-            "HUsqkqjxvIh3CYaZToWcB2TFHMc8oQc5UNlQ",
-            // "QZ9dSBz3SUq-thfPe71XMw", // akun rabih
-            // "m9l4FqPgrsg9bw3Le1MeLyecmPPOrCnTjjvR",
-            meetingNumber,
-            role
-        )
-        return res.status(200).json({signature: signature})
+            console.log(data)
+            res.status(200).json({data})
+        default:
+            res.setHeader('Allow', ['GET', 'PUT'])
+            res.status(405).end(`Method ${method} Not Allowed`)
     }
 
-    return res.status(400).send(`${req.method} Bad request`)
 }
-
-export default handler
