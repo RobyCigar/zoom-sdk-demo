@@ -9,7 +9,8 @@ export default function Home() {
   const [meetingNumber, setMeetingNumber] = useState("8785200656")
   const [password, setPassword] = useState("123")
   const [role, setRole] = useState(1) // 0 untuk join, 1 untuk membuat meet
-  const [apiKey, setApiKey] = useState('QZ9dSBz3SUq-thfPe71XMw')
+  // const [apiKey, setApiKey] = useState('QZ9dSBz3SUq-thfPe71XMw') // akun rabih
+	const [apiKey, setApiKey] = useState('Q4Lah9qqT127gh5kMd_VQg') // akun lingo
   const router = useRouter();
 
 

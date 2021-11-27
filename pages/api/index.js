@@ -33,8 +33,10 @@ const handler = (req, res) => {
                 .send('Please add meetingNumber and role in your query')
         console.log(process.env.API_KEY)
         const signature = generateSignature(
-            "QZ9dSBz3SUq-thfPe71XMw",
-            "m9l4FqPgrsg9bw3Le1MeLyecmPPOrCnTjjvR",
+            "Q4Lah9qqT127gh5kMd_VQg", // akun lingo
+            "HUsqkqjxvIh3CYaZToWcB2TFHMc8oQc5UNlQ",
+            // "QZ9dSBz3SUq-thfPe71XMw", // akun rabih
+            // "m9l4FqPgrsg9bw3Le1MeLyecmPPOrCnTjjvR",
             meetingNumber,
             role
         )
